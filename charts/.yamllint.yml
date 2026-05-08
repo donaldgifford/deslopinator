@@ -16,4 +16,4 @@ rules:
     check-keys: false
   empty-values: disable
 ignore: |-
-  charts/repo-guardian/templates/
+  charts/deslopinator/templates/

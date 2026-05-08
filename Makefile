@@ -99,9 +99,9 @@ clean: ## Remove build artifacts
 
 ## Application Services
 
-run: ## Run CLI command
+run: build ## Run CLI command
 	@ $(MAKE) --no-print-directory log-$@
-	./build/bin/repo-guardian
+	@$(BIN_DIR)/$(PROJECT_NAME)
 
 run-local: build ## Run exporter with local config
 	@ $(MAKE) --no-print-directory log-$@

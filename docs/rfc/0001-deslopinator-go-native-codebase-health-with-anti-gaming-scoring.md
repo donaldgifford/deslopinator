@@ -13,29 +13,27 @@ created: 2026-05-07
 **Status:** Draft **Author:** Donald Gifford **Date:** 2026-05-07
 
 <!--toc:start-->
-
-- [RFC 0001: Deslopinator: Go-native codebase health with anti-gaming scoring](#rfc-0001-deslopinator-go-native-codebase-health-with-anti-gaming-scoring)
-  - [Summary](#summary)
-  - [Problem Statement](#problem-statement)
-  - [Proposed Solution](#proposed-solution)
-  - [Design](#design)
-    - [High-level architecture](#high-level-architecture)
-    - [Concurrency model](#concurrency-model)
-    - [State schema with explicit migrations](#state-schema-with-explicit-migrations)
-    - [Subjective review provider interface](#subjective-review-provider-interface)
-    - [Scoring honesty: what we adopt, what we tighten](#scoring-honesty-what-we-adopt-what-we-tighten)
-    - [Agent integration](#agent-integration)
-  - [Alternatives Considered](#alternatives-considered)
-  - [Implementation Phases](#implementation-phases)
-    - [Phase 1: Rename + scaffold](#phase-1-rename-scaffold)
-    - [Phase 2: Scoring + state + queue](#phase-2-scoring-state-queue)
-    - [Phase 3: Subjective review provider abstraction](#phase-3-subjective-review-provider-abstraction)
-    - [Phase 4: Multi-language plugins](#phase-4-multi-language-plugins)
-    - [Phase 5: Agent skill synthesis + production hardening](#phase-5-agent-skill-synthesis-production-hardening)
-  - [Risks and Mitigations](#risks-and-mitigations)
-  - [Success Criteria](#success-criteria)
-  - [References](#references)
-  <!--toc:end-->
+- [Summary](#summary)
+- [Problem Statement](#problem-statement)
+- [Proposed Solution](#proposed-solution)
+- [Design](#design)
+  - [High-level architecture](#high-level-architecture)
+  - [Concurrency model](#concurrency-model)
+  - [State schema with explicit migrations](#state-schema-with-explicit-migrations)
+  - [Subjective review provider interface](#subjective-review-provider-interface)
+  - [Scoring honesty: what we adopt, what we tighten](#scoring-honesty-what-we-adopt-what-we-tighten)
+  - [Agent integration](#agent-integration)
+- [Alternatives Considered](#alternatives-considered)
+- [Implementation Phases](#implementation-phases)
+  - [Phase 1: Rename + scaffold](#phase-1-rename--scaffold)
+  - [Phase 2: Scoring + state + queue](#phase-2-scoring--state--queue)
+  - [Phase 3: Subjective review provider abstraction](#phase-3-subjective-review-provider-abstraction)
+  - [Phase 4: Multi-language plugins](#phase-4-multi-language-plugins)
+  - [Phase 5: Agent skill synthesis + production hardening](#phase-5-agent-skill-synthesis--production-hardening)
+- [Risks and Mitigations](#risks-and-mitigations)
+- [Success Criteria](#success-criteria)
+- [References](#references)
+<!--toc:end-->
 
 ## Summary
 
