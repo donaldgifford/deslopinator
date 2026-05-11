@@ -32,4 +32,5 @@ docz create impl "Your Implementation Title"
 
 | ID | Title | Status | Date | Author | Link |
 |----|-------|--------|------|--------|------|
+| IMPL-0001 | Initial deslopinator implementation phasing | Draft | 2026-05-08 | Donald Gifford | [0001-initial-deslopinator-implementation-phasing.md](0001-initial-deslopinator-implementation-phasing.md) |
 <!-- END DOCZ AUTO-GENERATED -->

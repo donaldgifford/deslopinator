@@ -13,12 +13,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - **ADR-0005** — OTEL is the only observability backbone; default deployment is plain OTEL. Langfuse / Phoenix / LangSmith layer on via a single `LLMExtension` interface — same shape as ADR-0004's vendor sub-interfaces. Disable short-circuits to no-op providers. `pkg/logger` is public and interface-driven via `slog.Handler`; swap to zap/zerolog via `logger.NewWithHandler` only if profiling demands. Pattern reference: `server-price-tracker/pkg/{logger,observability}`.
 - **ADR-0006** — HCL2 for all deslopinator-owned config files (`.deslopinator.hcl`). YAML is reserved for tool-imposed formats (`.golangci.yml`, GitHub Actions, kubebuilder CRDs in the operator repo).
 - **DESIGN-0001** — Engine + worker pool: detector tiers, fan-out/fan-in over `errgroup`, deterministic output regardless of scheduling, OTEL spans wrap each phase.
-- **DESIGN-0002** — CLI command surface: `scan`, `next`, `resolve`, `status`, `findings`, `score`, `state`, `review`, `init`. HCL2 `.deslopinator.hcl` config; persistent flags include `--no-otel`/`--no-langfuse`.
+- **DESIGN-0002** — CLI command surface: `scan`, `next`, `resolve`, `status`, `findings`, `score`, `state`, `review`, `init`. HCL2 `.deslopinator.hcl` config; persistent flags include `--no-otel`/`--no-llm-extension`.
 - **DESIGN-0003** — Concrete `pkg/api` / `pkg/llm` / `pkg/provider` / `pkg/logger` / `pkg/observability` / `pkg/client` shapes the operator builds CRDs against; `StateV1` is frozen.
+- **IMPL-0001** — Active phasing plan for v0.1.0: 10 phases (0–9), each with checkbox tasks and success criteria. Open questions resolved. **Start here when picking up implementation work** — `docs/impl/0001-initial-deslopinator-implementation-phasing.md`.
 
 **Read the RFC and these docs before making non-trivial design decisions.** They define the boundary rules (`lang/` may import `engine/`, never the reverse; `pkg/` defines the contract, `internal/` implements it), the in-tree-only `ReviewProvider` boundary, the versioned `StateV1` schema, and the agent execution loop (`scan` → `next` → `resolve`).
 
-Current state: scaffold only. `cmd/deslopinator/main.go` is a stub `package main` with no `main()` yet. The `internal/engine/`, `internal/lang/`, `internal/review/`, `internal/attestation/`, `internal/agent/`, and `pkg/{api,provider,client}/` trees described in the RFC and DESIGN docs do not exist yet — Phase 1 hasn't started.
+Current state: pre-Phase-0 scaffold. `cmd/deslopinator/main.go` is a stub with no `main()`. None of the `internal/` or `pkg/` trees from the DESIGN docs exist yet. **Next implementation step is IMPL-0001 Phase 0** (repo foundation + public types under `pkg/api` and `pkg/logger`).
 
 ## Common commands
 
@@ -43,6 +44,9 @@ The Makefile's `log-%` pattern echoes each target's `##` help comment when invok
 
 ## Conventions worth knowing
 
+- **Interface-driven design for swap points.** When a vendor or backend can vary (LLM providers, observability platforms, logger handlers, rationale codes vs text), expose a common interface in `pkg/` plus an optional vendor sub-interface alongside — `Backend` + `AnthropicBackend` (ADR-0004), `LLMExtension` + `langfuse.Operations` (ADR-0005). Drive selection via HCL config blocks, not by hard-coding.
+- **NEVER import AI vendor SDKs.** Forbidden: `anthropic-sdk-go`, `openai-go` (or `sashabaranov/go-openai`), `ollama/ollama`, `langfuse-go-sdk`, `tmc/langchaingo`. Backends speak HTTP directly via `net/http` + `encoding/json`. Same rule for Langfuse — we ship our own HTTP client. See ADR-0002 approved-deps list and ADR-0004.
+- **Pattern reference repo:** `github.com/donaldgifford/server-price-tracker` — `pkg/{extract,judge,logger,observability}` are the canonical references for our `pkg/{llm,provider,logger,observability}`. Direct copy-paste of structural patterns is acceptable; we do NOT import the package.
 - **Module path:** `github.com/donaldgifford/deslopinator`. `goimports` is configured with `-local github.com/donaldgifford` so local imports group separately; `.golangci.yml`'s `goimports.local-prefixes` matches.
 - **Linter baseline:** `.golangci.yml` is based on the Uber Go Style Guide. Notable strict settings: `gocyclo` min-complexity 15, `funlen` 100 lines / 50 statements, `nestif` 4, `nakedret` max 5 lines, `goconst` triggers at 3 occurrences, `errcheck` checks blanks and type assertions. `nolintlint` requires both an explanation and a specific linter — never write a bare `//nolint`.
 - **License:** Apache-2.0 (RFC §"OSI-approved license" — this is a deliberate differentiation from desloppify's OSNL). The `license-check` allow-list is the source of truth for acceptable transitive deps.

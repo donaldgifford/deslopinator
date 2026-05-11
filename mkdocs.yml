@@ -18,6 +18,7 @@ nav:
         - 'DESIGN-0003: Public API for operator consumers': design/0003-public-api-for-operator-consumers.md
     - Implementation Plans:
         - Overview: impl/README.md
+        - 'IMPL-0001: Initial deslopinator implementation phasing': impl/0001-initial-deslopinator-implementation-phasing.md
     - Investigations:
         - Overview: investigation/README.md
     - Plans:
